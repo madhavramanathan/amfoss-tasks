@@ -22,7 +22,7 @@ public class MathQuiz extends JFrame {
     ButtonGroup levelGroup = new ButtonGroup();
 
     //labels
-    JLabel QuestionLabel = new JLabel("Question:");
+    JLabel questionLabel = new JLabel("Question:");
     JLabel answerLabel = new JLabel("Answer:");
     JLabel shownLabel = new JLabel("Question will be shown :");
     JLabel questionshownLabel = new JLabel("Question:");
@@ -48,7 +48,6 @@ public class MathQuiz extends JFrame {
     double result;
     String question;
     long startTime, finishTime, timeSpent;
-    boolean isstart=false;
 
     //invisible panel of selecting intervals
     JPanel panel4 = new JPanel();
@@ -114,8 +113,8 @@ public class MathQuiz extends JFrame {
         panel12.setLayout(new GridLayout(4, 1));
         panel2.setLayout(new GridLayout(3, 1));
         panel21.setLayout(new GridLayout(1, 2));
-        panel211.setLayout(new FlowLayout(FlowLayout.LEFT)); 
-        panel212.setLayout(new FlowLayout(FlowLayout.LEFT)); 
+        panel211.setLayout(new FlowLayout(FlowLayout.LEFT)); /* Gridlerin içini flow yaptýk. Çünki */
+        panel212.setLayout(new FlowLayout(FlowLayout.LEFT)); /* label'lar ortalý duruyorlar idi.   */
         panel3.setLayout(new GridLayout(1, 2));
         panel5.setLayout(new BorderLayout());
 
@@ -153,7 +152,7 @@ public class MathQuiz extends JFrame {
         panel12.add(radioButton7);
         panel12.add(radioButton8);
 
-        panel211.add(QuestionLabel);
+        panel211.add(questionLabel);
         panel212.add(answerLabel);
 
         panel22.add(shownLabel);
@@ -301,17 +300,12 @@ public class MathQuiz extends JFrame {
 
     class startListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            isstart=true;
+
             if (interval == 4) {
-                int doubleOfInterval1, doubleOfInterval2;
-                    try{
-                     doubleOfInterval1 = Integer.parseInt(interval1.getText());
-                     doubleOfInterval2 = Integer.parseInt(interval2.getText());
-                    }
-                    catch(Exception eee)
-                    {
-                        return;
-                    }
+                // getting intervals from user
+                int doubleOfInterval1 = Integer.parseInt(interval1.getText());
+                int doubleOfInterval2 = Integer.parseInt(interval2.getText());
+
                 // generating numbers between intervals
                 num1 = (int)(Math.random() * (doubleOfInterval2 - doubleOfInterval1 + 1) + doubleOfInterval1);
                 num2 = (int)(Math.random() * (doubleOfInterval2 - doubleOfInterval1 + 1) + doubleOfInterval1);
@@ -333,18 +327,18 @@ public class MathQuiz extends JFrame {
 
 
             // generating formula
-            if (operator == 3) {
+            if (operator == 1) {
+                result = num1 * num2; //formula 
+                question = ("" + num1 + "+" + num2); //question label content
+            } else if (operator == 2) {
+                result = num1 - num2; //formula 
+                question = ("" + num1 + "-" + num2); //question label content
+            } else if (operator == 3) {
                 result = num1 * num2; //formula 
                 question = ("" + num1 + "*" + num2); //question label content
             } else if (operator == 4) {
                 result = num1 / num2; //formula 
                 question = ("" + num1 + "/" + num2); //question label content
-            } else if (operator == 1) {
-                result = num1 + num2; //formula 
-                question = ("" + num1 + "+" + num2); //question label content
-            } else if (operator == 2) {
-                result = num1 - num2; //formula 
-                question = ("" + num1 + "-" + num2); //question label content
             } else {
                 result = num1 + num2; //formula 
                 question = ("" + num1 + "+" + num2); //question label content
@@ -369,15 +363,9 @@ public class MathQuiz extends JFrame {
         public void keyPressed(KeyEvent e) {
 
             // checking enter action
-            if (e.getKeyCode() == KeyEvent.VK_ENTER && isstart) {
-                double doubleOfInput;
-                try{
-                doubleOfInput = Double.parseDouble(input.getText()); // getting string to double
-                }
-                catch(Exception ee)
-                {
-                    return;
-                }
+            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+
+                double doubleOfInput = Double.parseDouble(input.getText()); // getting string to double
 
                 // checking answer is correct or wrong
                 if (doubleOfInput == result) {
@@ -385,7 +373,7 @@ public class MathQuiz extends JFrame {
                     String stringcount = Integer.toString(correctCount); // getting integer to string
                     countLabel.setText(stringcount); // setting string to label	
                 } else {
-                    wrongCount++; // increasing wrong counter
+                    wrongCount += 1; // increasing wrong counter
                 }
 
                 input.setText(""); // clearing input after user entered answer
@@ -401,15 +389,9 @@ public class MathQuiz extends JFrame {
                     num1 = (int)(Math.random() * 21);
                     num2 = (int)(Math.random() * 21);
                 } else if (interval == 4) {
-                    int doubleOfInterval1, doubleOfInterval2;
-                    try{
-                     doubleOfInterval1 = Integer.parseInt(interval1.getText());
-                     doubleOfInterval2 = Integer.parseInt(interval2.getText());
-                    }
-                    catch(Exception eee)
-                    {
-                        return;
-                    }
+                    int doubleOfInterval1 = Integer.parseInt(interval1.getText());
+                    int doubleOfInterval2 = Integer.parseInt(interval2.getText());
+
                     num1 = (int)(Math.random() * (doubleOfInterval2 - doubleOfInterval1 + 1) + doubleOfInterval1);
                     num2 = (int)(Math.random() * (doubleOfInterval2 - doubleOfInterval1 + 1) + doubleOfInterval1);
                 } else {
@@ -417,21 +399,22 @@ public class MathQuiz extends JFrame {
                     num2 = (int)(Math.random() * 100);
                 }
 
-                if (operator == 3) {
-                    result = num1 * num2; //formula 
-                    question = ("" + num1 + "*" + num2); //question label content
-                } else if (operator == 4) {
-                    result = num1 / num2; //formula 
-                    question = ("" + num1 + "/" + num2); //question label content
-                } else if (operator == 1) {
-                    result = num1 + num2; //formula 
-                    question = ("" + num1 + "+" + num2); //question label content
+                //re-generating formula
+                if (operator == 1) {
+                    result = num1 + num2;
+                    question = ("" + num1 + "+" + num2);
                 } else if (operator == 2) {
-                    result = num1 - num2; //formula 
-                    question = ("" + num1 + "-" + num2); //question label content
+                    result = num1 - num2;
+                    question = ("" + num1 + "-" + num2);
+                } else if (operator == 3) {
+                    result = num1 * num2;
+                    question = ("" + num1 + "*" + num2);
+                } else if (operator == 4) {
+                    result = num1 / num2;
+                    question = ("" + num1 + "/" + num2);
                 } else {
-                    result = num1 + num2; //formula 
-                    question = ("" + num1 + "+" + num2); //question label content
+                    result = num1 + num2;
+                    question = ("" + num1 + "+" + num2);
                 }
 
                 shownLabel.setText(question); //setting new question
@@ -451,8 +434,8 @@ public class MathQuiz extends JFrame {
         public void actionPerformed(ActionEvent e) {
             finishTime = System.currentTimeMillis(); // getting stopped time
             timeSpent = finishTime - startTime; // calculating time spent
-            long realTime = timeSpent / 1000; // converting to readible time (because it is miliseconds)
-            String stringtimeSpent = Long.toString(realTime); // converting long to string
+            long realTime = timeSpent / 100; // converting to readible time (because it is miliseconds)
+            String stringtimeSpent = Long.toString(realTime); // converting float to string
             timeLabel.setText(stringtimeSpent + " seconds"); // setting timeLabel
 
             if (interval == 4) // if there is interval
@@ -460,18 +443,16 @@ public class MathQuiz extends JFrame {
 
 
             correctAnswer.setText("" + correctCount); // showing correct for both jframes
-            wrongAnswer.setText("" + wrongCount); // showing wrong for new jframes
+            wrongAnswer.setText("" + wrongCount); // showing correct for new jframes
 
             input.setText(""); // clearing input after user pressed stop button  	
             shownLabel.setText("Question will be shown :"); // clearing label after user pressed stop button  
 
             gameOver.setVisible(true); //showing gameover frame
-            //RESET
-            isstart=false;
 
         }
     }
-    public static void main(String[] args)throws Exception{
+    public static void main(String[] args) {
         final MathQuiz frame = new MathQuiz();
         frame.pack();
         frame.setTitle("Math Quiz");
@@ -481,4 +462,3 @@ public class MathQuiz extends JFrame {
 
     }
 }
-
